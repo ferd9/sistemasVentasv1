@@ -10,8 +10,6 @@ import com.simple.app.modelo.Categoria;
 import com.simple.app.vistas.custom.DeleteCellEditor;
 import com.simple.app.vistas.custom.TableDeleteActionCellRender;
 import com.simple.app.vistas.interfaces.TableActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
