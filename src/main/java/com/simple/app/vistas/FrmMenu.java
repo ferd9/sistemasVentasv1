@@ -53,7 +53,6 @@ public class FrmMenu extends javax.swing.JFrame {
         jMenuItem_gestionar_cliente = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem_nueva_categoria = new javax.swing.JMenuItem();
-        jMenuItem_gestionar_categorias = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem_nueva_venta = new javax.swing.JMenuItem();
         jMenuItem_gestionar_ventas = new javax.swing.JMenuItem();
@@ -162,7 +161,6 @@ public class FrmMenu extends javax.swing.JFrame {
         jMenuItem_gestionar_cliente.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jMenuItem_gestionar_cliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cliente.png"))); // NOI18N
         jMenuItem_gestionar_cliente.setText("Gestionar Clientes");
-        jMenuItem_gestionar_cliente.setPreferredSize(new java.awt.Dimension(180, 30));
         jMenuItem_gestionar_cliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem_gestionar_clienteActionPerformed(evt);
@@ -187,17 +185,6 @@ public class FrmMenu extends javax.swing.JFrame {
             }
         });
         jMenu4.add(jMenuItem_nueva_categoria);
-
-        jMenuItem_gestionar_categorias.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jMenuItem_gestionar_categorias.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/categorias.png"))); // NOI18N
-        jMenuItem_gestionar_categorias.setText("Gestionar Categorias");
-        jMenuItem_gestionar_categorias.setPreferredSize(new java.awt.Dimension(200, 30));
-        jMenuItem_gestionar_categorias.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem_gestionar_categoriasActionPerformed(evt);
-            }
-        });
-        jMenu4.add(jMenuItem_gestionar_categorias);
 
         jMenuBar1.add(jMenu4);
 
@@ -328,16 +315,20 @@ public class FrmMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem_reportes_ventasActionPerformed
 
     private void jMenuItem_nueva_categoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_nueva_categoriaActionPerformed
-        InterCategoria interCategoria = new InterCategoria();
+        GestionDeCategorias interCategoria = new GestionDeCategorias();
+
+        Dimension desktopSize = jDesktopPane_menu.getSize();
+        Dimension jInternalFrameSize = interCategoria.getSize();
+
+        // Calcular las coordenadas para centrar
+        int width = (desktopSize.width - jInternalFrameSize.width) / 2;
+        int height = (desktopSize.height - jInternalFrameSize.height) / 2;
+
+        // Establecer la ubicación
+        interCategoria.setLocation(width, height);
         jDesktopPane_menu.add(interCategoria);
         interCategoria.setVisible(true);
     }//GEN-LAST:event_jMenuItem_nueva_categoriaActionPerformed
-
-    private void jMenuItem_gestionar_categoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_gestionar_categoriasActionPerformed
-        /*InterGestionarCategoria interGestionarCategoria = new InterGestionarCategoria();
-        jDesktopPane_menu.add(interGestionarCategoria);
-        interGestionarCategoria.setVisible(true);*/
-    }//GEN-LAST:event_jMenuItem_gestionar_categoriasActionPerformed
 
     private void jMenuItem3_nuevo_productoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3_nuevo_productoActionPerformed
         /*InterProducto interProducto = new InterProducto();
@@ -469,7 +460,6 @@ public class FrmMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem_actualizar_stock;
     private javax.swing.JMenuItem jMenuItem_cerrar_sesion;
-    private javax.swing.JMenuItem jMenuItem_gestionar_categorias;
     private javax.swing.JMenuItem jMenuItem_gestionar_cliente;
     private javax.swing.JMenuItem jMenuItem_gestionar_producto;
     private javax.swing.JMenuItem jMenuItem_gestionar_usuario;
