@@ -12,6 +12,7 @@ import jakarta.persistence.EntityManagerFactory;
 import java.io.Serializable;
 import jakarta.persistence.Query;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.List;
 public class CategoriaJpaController implements Serializable {
 
     private HibernateConfig hibernateConfig = null;
-    public CategoriaJpaController(EntityManagerFactory emf) {
+    public CategoriaJpaController() {
         this.hibernateConfig = new HibernateConfig();
     }
     private EntityManagerFactory emf = null;
@@ -119,6 +120,23 @@ public class CategoriaJpaController implements Serializable {
         try {
             return em.find(Categoria.class, id);
         } finally {
+            em.close();
+        }
+    }
+    
+    public Categoria findCategoriaByDecripcion(String descripcion){
+        EntityManager em = getEntityManager();
+        
+        try{            
+        
+            Categoria categoria = em.createQuery("SELECT u from Categoria u WHERE u.descripcion = :descripcion",Categoria.class)
+                    .setParameter("descripcion", descripcion)
+                    .getSingleResult();
+            return categoria;
+        }catch(NoResultException ex){
+            System.err.println(ex.getMessage());
+            return null;
+        }finally {
             em.close();
         }
     }

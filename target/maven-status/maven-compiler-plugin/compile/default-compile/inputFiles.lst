@@ -9,11 +9,13 @@ C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\si
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\exceptions\IllegalOrphanException.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\CabeceraVentaJpaController.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\exceptions\NonexistentEntityException.java
+C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\InterGestionarCategoria.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\ProductoJpaController.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\FrmLogin.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\DetalleVentaJpaController.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\InterUsuario.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\SistemasVentasV1.java
+C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\InterCategoria.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\ClienteJpaController.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\modelo\CabeceraVenta.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\UsuarioJpaController.java

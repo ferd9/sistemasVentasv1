@@ -328,9 +328,9 @@ public class FrmMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem_reportes_ventasActionPerformed
 
     private void jMenuItem_nueva_categoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_nueva_categoriaActionPerformed
-        /*InterCategoria interCategoria = new InterCategoria();
+        InterCategoria interCategoria = new InterCategoria();
         jDesktopPane_menu.add(interCategoria);
-        interCategoria.setVisible(true);*/
+        interCategoria.setVisible(true);
     }//GEN-LAST:event_jMenuItem_nueva_categoriaActionPerformed
 
     private void jMenuItem_gestionar_categoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_gestionar_categoriasActionPerformed
