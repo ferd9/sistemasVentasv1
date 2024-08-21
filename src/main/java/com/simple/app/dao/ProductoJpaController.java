@@ -12,6 +12,7 @@ import jakarta.persistence.EntityManagerFactory;
 import java.io.Serializable;
 import jakarta.persistence.Query;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import java.util.List;
@@ -25,7 +26,7 @@ public class ProductoJpaController implements Serializable {
     
     private HibernateConfig hibernateConfig = null;
     
-    public ProductoJpaController(EntityManagerFactory emf) {
+    public ProductoJpaController() {
         this.hibernateConfig = new HibernateConfig(); 
     }    
 
@@ -122,6 +123,24 @@ public class ProductoJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+    public Producto findProductoByName(String nombreProducto){
+                EntityManager em = getEntityManager();
+        
+        try{            
+        
+            Producto producto = em.createQuery("SELECT u from Producto u WHERE u.nombre = :nombreProducto",Producto.class)
+                    .setParameter("nombreProducto", nombreProducto)
+                    .setMaxResults(1)
+                    .getSingleResult();
+            return producto;
+        }catch(NoResultException ex){
+            System.err.println(ex.getMessage());
+            return null;
+        }finally {
+            em.close();
+        }        
     }
 
     public int getProductoCount() {

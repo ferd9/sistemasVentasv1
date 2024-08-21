@@ -4,17 +4,39 @@
  */
 package com.simple.app.vistas;
 
+import com.simple.app.dao.CategoriaJpaController;
+import com.simple.app.dao.ProductoJpaController;
+import com.simple.app.dao.exceptions.NonexistentEntityException;
+import com.simple.app.modelo.Categoria;
+import com.simple.app.modelo.Producto;
+import com.simple.app.vistas.custom.DeleteCellEditor;
+import com.simple.app.vistas.custom.TableDeleteActionCellRender;
+import com.simple.app.vistas.interfaces.TableActionEvent;
+import com.simple.app.vistas.models.CategoriaComboModel;
+import com.simple.app.vistas.models.ProductoTableModel;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 /**
  *
  * @author Lynkos
  */
-public class GestionDeProductos extends javax.swing.JFrame {
+public class GestionDeProductos extends javax.swing.JInternalFrame  {
 
     /**
      * Creates new form GestionDeProductos
      */
     public GestionDeProductos() {
         initComponents();
+        this.setClosable(true);  
+        this.setSize(800, 600);
+        initDefaultValues();
+        cargarTablaProductos();
+        eventoSeleccionarTabla();
     }
 
     /**
@@ -38,7 +60,7 @@ public class GestionDeProductos extends javax.swing.JFrame {
         spCantidad = new javax.swing.JSpinner();
         ftxtPrecio = new javax.swing.JFormattedTextField();
         ftxtImpuestos = new javax.swing.JFormattedTextField();
-        cbCategorias = new javax.swing.JComboBox<>();
+        cbCategorias = new javax.swing.JComboBox<Categoria>();
         jScrollPane1 = new javax.swing.JScrollPane();
         taDescripcion = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
@@ -117,7 +139,7 @@ public class GestionDeProductos extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 5);
         jPanel2.add(spCantidad, gridBagConstraints);
 
-        ftxtPrecio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        ftxtPrecio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -125,7 +147,7 @@ public class GestionDeProductos extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
         jPanel2.add(ftxtPrecio, gridBagConstraints);
 
-        ftxtImpuestos.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        ftxtImpuestos.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -133,7 +155,8 @@ public class GestionDeProductos extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
         jPanel2.add(ftxtImpuestos, gridBagConstraints);
 
-        cbCategorias.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar Categoria", "Item 2", "Item 3", "Item 4" }));
+        cbCategorias.setModel(new CategoriaComboModel());
+        cbCategorias.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
@@ -189,13 +212,14 @@ public class GestionDeProductos extends javax.swing.JFrame {
 
         tblProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "id", "Nombre", "Precio", "Impuestos", "Cantidad", "Categoria", "Descripción"
             }
         ));
         jScrollPane2.setViewportView(tblProductos);
@@ -214,52 +238,187 @@ public class GestionDeProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
+        String nombre = this.txtNombre.getText().trim();
+
+        // Validar que el JTextField no esté vacío
+        if (nombre.isBlank()) {            
+            JOptionPane.showMessageDialog(null, "Nombre inválido. Debe contener solo letras, números, guion y subguion.");
+            return;
+        }
+        ProductoJpaController productoJpaController = new ProductoJpaController();
+        if(productoJpaController.findProductoByName(nombre) != null){
+            
+            String[] options = {"Continuar", "Cancelar"};
+            int response = JOptionPane.showOptionDialog(null, "Ya existe un producto con el nombre: "+nombre, null,
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.WARNING_MESSAGE,
+                        null, options, null);
+                if (response != 0){
+                    return;
+                }
+            
+        }
+        
+        if(this.cbCategorias.getSelectedItem() == null){
+            JOptionPane.showMessageDialog(null, "Categoria no valida.");
+            return;
+        }
+        
+         // Obtener el valor del primer JFormattedTextField (Precio)
+        Double precio = Double.parseDouble(String.valueOf(this.ftxtPrecio.getValue()));
+        Integer impuesto = Integer.parseInt(String.valueOf((this.ftxtImpuestos.getValue())));
+
+        // Obtener el valor del segundo JFormattedTextField (Cantidad)
+        int cantidad = (int) this.spCantidad.getValue();
+
+        // Obtener el valor seleccionado en el 
+        Categoria categoriaSelecionada = (Categoria)this.cbCategorias.getSelectedItem();
+        
+
+        // Obtener el valor del JTextArea
+        String descripcion = this.taDescripcion.getText();
+        
+        
+        Producto producto = new Producto();
+        
+        producto.setNombre(nombre);
+        producto.setCantidad(cantidad);
+        producto.setPrecio(precio);
+        producto.setPorcentajeIva(impuesto);
+        producto.setIdCategoria(categoriaSelecionada.getIdCategoria());
+        producto.setDescripcion(descripcion);
+        producto.setEstado(1);
+        
+        System.out.println(producto);
+        productoJpaController = new ProductoJpaController();
+        productoJpaController.create(producto);
+        cargarTablaProductos();
+        initDefaultValues();
+        
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnActualizarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+    private void cargarTablaProductos(){
+        
+        ProductoJpaController productoJpaController = new ProductoJpaController();
+        List<Producto> listaProductos = productoJpaController.findProductoEntities(); 
+        productoJpaController.close();
+        ProductoTableModel model = new ProductoTableModel(listaProductos);
+        this.tblProductos.setModel(model);
+        
+        TableActionEvent tableActionEvent = new TableActionEvent() {
+            @Override
+            public void onEdit(int row) {
+                //sin inplementacion               
+            }
+
+            @Override
+            public void onDelete(int row) {
+                System.out.println(row);
+
+                String[] options = {"Eliminar", "Cancelar"};
+                int response = JOptionPane.showOptionDialog(null, "¿Esta seguro de eliminar la categoria seleccionada?", null,
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.WARNING_MESSAGE,
+                        null, options, null);
+                if (response == 0) {
+                    //int idCategoria = (int) tblCategorias.getModel().getValueAt(row, 0);
+                    Producto productoSelecionado = ((ProductoTableModel)tblProductos.getModel()).getProductoAt(row);                   
+                    deleteProducto(productoSelecionado.getIdProducto());
+                    cargarTablaProductos();
+                }
+
+            }
+
+            @Override
+            public void onView(int row) {
+                System.out.println(row);
+            }
+        };
+        
+        tblProductos.setRowHeight(35);
+        tblProductos.getColumnModel().getColumn(8).setCellRenderer(new TableDeleteActionCellRender());
+        tblProductos.getColumnModel().getColumn(8).setCellEditor(new DeleteCellEditor(tableActionEvent));
+        
+    }
+    
+    private void cargarCategorias(){
+        
+       CategoriaJpaController categoriaJpaController = new CategoriaJpaController();
+       List<Categoria> categorias = categoriaJpaController.findCategoriaEntities();  
+       CategoriaComboModel categoriaComboModel = new CategoriaComboModel();
+       categoriaComboModel.addCategorias(categorias);
+       this.cbCategorias.setModel(categoriaComboModel);
+       categoriaJpaController.close();
+    }
+    
+    
+    private void initDefaultValues(){
+        this.ftxtImpuestos.setValue(0);
+        this.ftxtPrecio.setValue(0);
+        this.taDescripcion.setText("");
+        this.txtNombre.setText("");
+        this.cargarCategorias();
+        this.spCantidad.setValue(1);
+    }
+    
+    private void deleteProducto(int idProducto){
+        ProductoJpaController productoJpaController = new ProductoJpaController();
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+            productoJpaController.destroy(idProducto);            
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(GestionDeProductos.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error: no se puedo eliminar.");
+        }finally{
+            productoJpaController.close();
+        }
+    }
+    
+    
+    private void filaDeTablaSeleccionada(){
+        int filaSeleccionada = this.tblProductos.getSelectedRow();
+        if(filaSeleccionada < 0)
+        {
+            return;
+        }
+        Producto producto = ((ProductoTableModel)this.tblProductos.getModel()).getProductoAt(filaSeleccionada);
+        this.txtNombre.setText(producto.getNombre());
+        this.ftxtPrecio.setValue(producto.getPrecio());
+        this.ftxtImpuestos.setValue(producto.getPorcentajeIva());
+        this.spCantidad.setValue(producto.getCantidad());
+        this.taDescripcion.setText(producto.getDescripcion());
+        
+        
+        for(int i = 0; i < this.cbCategorias.getItemCount(); i++){
+            Categoria categoria = this.cbCategorias.getItemAt(i);
+            if(categoria.getIdCategoria() == producto.getIdCategoria()){
+                this.cbCategorias.setSelectedIndex(i);
+                System.out.println("ID categoria: "+categoria.getIdCategoria());
+                break;
+            }            
+        }       
+        
+    }
+    
+    private void eventoSeleccionarTabla(){
+        this.tblProductos.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(!e.getValueIsAdjusting()){
+                    filaDeTablaSeleccionada();
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GestionDeProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GestionDeProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GestionDeProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GestionDeProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GestionDeProductos().setVisible(true);
-            }
+        
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JComboBox<String> cbCategorias;
+    private javax.swing.JComboBox<Categoria> cbCategorias;
     private javax.swing.JFormattedTextField ftxtImpuestos;
     private javax.swing.JFormattedTextField ftxtPrecio;
     private javax.swing.JLabel jLabel1;

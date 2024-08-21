@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -64,6 +65,32 @@ public class Categoria implements Serializable {
     public void setEstado(int estado) {
         this.estado = estado;
     }
-     
+
+    @Override
+    public String toString() {
+        return descripcion;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.idCategoria);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Categoria other = (Categoria) obj;
+        return Objects.equals(this.idCategoria, other.idCategoria);
+    }
     
 }

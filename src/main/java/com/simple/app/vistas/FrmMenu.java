@@ -331,9 +331,10 @@ public class FrmMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem_nueva_categoriaActionPerformed
 
     private void jMenuItem3_nuevo_productoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3_nuevo_productoActionPerformed
-        /*InterProducto interProducto = new InterProducto();
+        GestionDeProductos interProducto = new GestionDeProductos();
         jDesktopPane_menu.add(interProducto);
-        interProducto.setVisible(true);*/
+        interProducto.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItem3_nuevo_productoActionPerformed
 
     private void jMenuItem_gestionar_productoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_gestionar_productoActionPerformed

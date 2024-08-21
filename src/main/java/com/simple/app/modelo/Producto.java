@@ -121,5 +121,11 @@ public class Producto implements Serializable {
     public void setEstado(int estado) {
         this.estado = estado;
     }
+
+    @Override
+    public String toString() {
+        return "Producto{" + "idProducto=" + idProducto + ", nombre=" + nombre + ", cantidad=" + cantidad + ", precio=" + precio + ", descripcion=" + descripcion + ", porcentajeIva=" + porcentajeIva + ", idCategoria=" + idCategoria + ", estado=" + estado + '}';
+    }
+    
     
 }

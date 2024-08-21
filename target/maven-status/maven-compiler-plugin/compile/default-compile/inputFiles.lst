@@ -2,6 +2,7 @@ C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\si
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\InterGestionarUsuario.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\GestionDeCategorias.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\config\HibernateConfig.java
+C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\models\CategoriaComboModel.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\custom\DeleteCellEditor.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\modelo\Categoria.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\FrmMenu.java
@@ -17,6 +18,7 @@ C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\si
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\InterUsuario.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\SistemasVentasV1.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\ClienteJpaController.java
+C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\GestionDeProductos.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\modelo\CabeceraVenta.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\UsuarioJpaController.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\custom\DeletePanel.java
@@ -24,6 +26,7 @@ C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\si
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\custom\TableDeleteActionCellRender.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\modelo\Usuario.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\interfaces\TableActionEvent.java
+C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\models\ProductoTableModel.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\modelo\Producto.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\custom\CustomCellEditor.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\custom\TableActionCellRender.java
