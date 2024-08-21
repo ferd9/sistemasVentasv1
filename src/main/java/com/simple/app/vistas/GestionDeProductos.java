@@ -396,6 +396,7 @@ public class GestionDeProductos extends javax.swing.JInternalFrame  {
             Categoria categoria = this.cbCategorias.getItemAt(i);
             if(categoria.getIdCategoria() == producto.getIdCategoria()){
                 this.cbCategorias.setSelectedIndex(i);
+                this.cbCategorias.updateUI();
                 System.out.println("ID categoria: "+categoria.getIdCategoria());
                 break;
             }            
