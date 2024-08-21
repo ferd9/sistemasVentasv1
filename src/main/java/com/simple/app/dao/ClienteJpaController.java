@@ -23,10 +23,11 @@ import java.util.List;
 public class ClienteJpaController implements Serializable {
 
     private HibernateConfig hibernateConfig = null;
-    
-    public ClienteJpaController(EntityManagerFactory emf) {
+
+    public ClienteJpaController() {
         this.hibernateConfig = new HibernateConfig();
-    }    
+    }   
+       
 
     public EntityManager getEntityManager() {
         return this.hibernateConfig.getEm();

@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package com.simple.app.vistas;
 
@@ -25,14 +25,13 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author Lynkos
  */
-public class GestionDeProductos extends javax.swing.JInternalFrame  {
+public class IFGestionProductos extends javax.swing.JInternalFrame {
 
     /**
-     * Creates new form GestionDeProductos
+     * Creates new form IFGestionProductos
      */
-    public GestionDeProductos() {
+    public IFGestionProductos() {
         initComponents();
-        this.setClosable(true);  
         this.setSize(800, 600);
         initDefaultValues();
         cargarTablaProductos();
@@ -70,7 +69,8 @@ public class GestionDeProductos extends javax.swing.JInternalFrame  {
         jScrollPane2 = new javax.swing.JScrollPane();
         tblProductos = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setClosable(true);
+        setTitle("Administrar Productos");
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
@@ -241,46 +241,44 @@ public class GestionDeProductos extends javax.swing.JInternalFrame  {
         String nombre = this.txtNombre.getText().trim();
 
         // Validar que el JTextField no esté vacío
-        if (nombre.isBlank()) {            
+        if (nombre.isBlank()) {
             JOptionPane.showMessageDialog(null, "Nombre inválido. Debe contener solo letras, números, guion y subguion.");
             return;
         }
         ProductoJpaController productoJpaController = new ProductoJpaController();
         if(productoJpaController.findProductoByName(nombre) != null){
-            
+
             String[] options = {"Continuar", "Cancelar"};
             int response = JOptionPane.showOptionDialog(null, "Ya existe un producto con el nombre: "+nombre, null,
-                        JOptionPane.DEFAULT_OPTION,
-                        JOptionPane.WARNING_MESSAGE,
-                        null, options, null);
-                if (response != 0){
-                    return;
-                }
-            
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.WARNING_MESSAGE,
+                null, options, null);
+            if (response != 0){
+                return;
+            }
+
         }
-        
+
         if(this.cbCategorias.getSelectedItem() == null){
             JOptionPane.showMessageDialog(null, "Categoria no valida.");
             return;
         }
-        
-         // Obtener el valor del primer JFormattedTextField (Precio)
+
+        // Obtener el valor del primer JFormattedTextField (Precio)
         Double precio = Double.parseDouble(String.valueOf(this.ftxtPrecio.getValue()));
         Integer impuesto = Integer.parseInt(String.valueOf((this.ftxtImpuestos.getValue())));
 
         // Obtener el valor del segundo JFormattedTextField (Cantidad)
         int cantidad = (int) this.spCantidad.getValue();
 
-        // Obtener el valor seleccionado en el 
+        // Obtener el valor seleccionado en el
         Categoria categoriaSelecionada = (Categoria)this.cbCategorias.getSelectedItem();
-        
 
         // Obtener el valor del JTextArea
         String descripcion = this.taDescripcion.getText();
-        
-        
+
         Producto producto = new Producto();
-        
+
         producto.setNombre(nombre);
         producto.setCantidad(cantidad);
         producto.setPrecio(precio);
@@ -288,20 +286,71 @@ public class GestionDeProductos extends javax.swing.JInternalFrame  {
         producto.setIdCategoria(categoriaSelecionada.getIdCategoria());
         producto.setDescripcion(descripcion);
         producto.setEstado(1);
-        
+
         System.out.println(producto);
         productoJpaController = new ProductoJpaController();
         productoJpaController.create(producto);
         cargarTablaProductos();
         initDefaultValues();
-        
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        // TODO add your handling code here:
+        String nombre = this.txtNombre.getText().trim();
+
+        // Validar que el JTextField no esté vacío
+        if (nombre.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Nombre inválido. Debe contener solo letras, números, guion y subguion.");
+            return;
+        }
+
+        ProductoJpaController productoJpaController = new ProductoJpaController();
+        // Obtener el valor del primer JFormattedTextField (Precio)
+        Double precio = Double.parseDouble(String.valueOf(this.ftxtPrecio.getValue()));
+        Integer impuesto = Integer.parseInt(String.valueOf((this.ftxtImpuestos.getValue())));
+
+        // Obtener el valor del segundo JFormattedTextField (Cantidad)
+        int cantidad = (int) this.spCantidad.getValue();
+
+        // Obtener el valor seleccionado en el
+        Categoria categoriaSelecionada = (Categoria)this.cbCategorias.getSelectedItem();
+
+        // Obtener el valor del JTextArea
+        String descripcion = this.taDescripcion.getText();
+
+        int filaSeleccionada = this.tblProductos.getSelectedRow();
+        if(filaSeleccionada < 0)
+        {
+            return;
+        }
+
+        Producto producto = ((ProductoTableModel)this.tblProductos.getModel()).getProductoAt(filaSeleccionada);
+
+        producto.setNombre(nombre);
+        producto.setCantidad(cantidad);
+        producto.setPrecio(precio);
+        producto.setPorcentajeIva(impuesto);
+        producto.setIdCategoria(categoriaSelecionada.getIdCategoria());
+        producto.setDescripcion(descripcion);
+        producto.setEstado(1);
+
+        System.out.println(producto);
+        productoJpaController = new ProductoJpaController();
+        try {
+            productoJpaController.edit(producto);
+            JOptionPane.showMessageDialog(null, "El producto se actualizo correctamente.");
+            cargarTablaProductos();
+        } catch (Exception ex) {
+            Logger.getLogger(IFGestionProductos.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error. no se pudo realizar la actualizacion.");
+        }finally{
+            productoJpaController.close();
+        }
+
     }//GEN-LAST:event_btnActualizarActionPerformed
 
-    private void cargarTablaProductos(){
+
+        private void cargarTablaProductos(){
         
         ProductoJpaController productoJpaController = new ProductoJpaController();
         List<Producto> listaProductos = productoJpaController.findProductoEntities(); 
@@ -370,7 +419,7 @@ public class GestionDeProductos extends javax.swing.JInternalFrame  {
         try {
             productoJpaController.destroy(idProducto);            
         } catch (NonexistentEntityException ex) {
-            Logger.getLogger(GestionDeProductos.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IFGestionProductos.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Error: no se puedo eliminar.");
         }finally{
             productoJpaController.close();
@@ -415,7 +464,8 @@ public class GestionDeProductos extends javax.swing.JInternalFrame  {
         
         });
     }
-
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnGuardar;

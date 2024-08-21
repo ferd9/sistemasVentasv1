@@ -331,7 +331,7 @@ public class FrmMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem_nueva_categoriaActionPerformed
 
     private void jMenuItem3_nuevo_productoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3_nuevo_productoActionPerformed
-        GestionDeProductos interProducto = new GestionDeProductos();
+        IFGestionProductos interProducto = new IFGestionProductos();
         jDesktopPane_menu.add(interProducto);
         interProducto.setVisible(true);
         
@@ -344,9 +344,9 @@ public class FrmMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem_gestionar_productoActionPerformed
 
     private void jMenuItem_nuevo_clienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_nuevo_clienteActionPerformed
-        /*InterCliente interCliente = new InterCliente();
+       IFClientes interCliente = new IFClientes();
         jDesktopPane_menu.add(interCliente);
-        interCliente.setVisible(true);*/
+        interCliente.setVisible(true);
     }//GEN-LAST:event_jMenuItem_nuevo_clienteActionPerformed
 
     private void jMenuItem_gestionar_clienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_gestionar_clienteActionPerformed
