@@ -12,6 +12,7 @@ import jakarta.persistence.EntityManagerFactory;
 import java.io.Serializable;
 import jakarta.persistence.Query;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import java.util.List;
@@ -119,6 +120,46 @@ public class ClienteJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             return em.find(Cliente.class, id);
+        } finally {
+            em.close();
+        }
+    }
+    
+    public Cliente findClienteByCedula(String cedula){
+        EntityManager em = getEntityManager();
+
+        try {
+
+            Cliente cliente = em.createQuery("SELECT u from Cliente u WHERE u.cedula = :cedula", Cliente.class)
+                    .setParameter("cedula", cedula)
+                    .getSingleResult();
+            return cliente;
+        } catch (NoResultException ex) {
+            System.err.println(ex.getMessage());
+            return null;
+        } finally {
+            em.close();
+        }        
+    }
+    
+    /**
+     * 
+     * @param data el valor a buscar en la tabla clientes
+     * @param campo es el nombre del campo en la tabla de la base de datos.
+     * @return 
+     */
+    public List<Cliente> findClientesByOptions(String data, String campo) {
+        EntityManager em = getEntityManager();
+
+        try {
+
+            List<Cliente> clientes = em.createQuery("SELECT u from Cliente u WHERE u." + campo + " = :data", Cliente.class)
+                    .setParameter("data", data)
+                    .getResultList();
+            return clientes;
+        } catch (NoResultException ex) {
+            System.err.println(ex.getMessage());
+            return null;
         } finally {
             em.close();
         }

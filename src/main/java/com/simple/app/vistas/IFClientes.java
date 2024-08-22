@@ -5,8 +5,19 @@
 package com.simple.app.vistas;
 
 import com.simple.app.dao.ClienteJpaController;
+import com.simple.app.dao.exceptions.NonexistentEntityException;
 import com.simple.app.modelo.Cliente;
+import com.simple.app.vistas.custom.DeleteCellEditor;
+import com.simple.app.vistas.custom.TableDeleteActionCellRender;
+import com.simple.app.vistas.interfaces.TableActionEvent;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -17,8 +28,10 @@ public class IFClientes extends javax.swing.JInternalFrame {
     /**
      * Creates new form IFClientes
      */
+    private Cliente clienteActualizar;
     public IFClientes() {
         initComponents();
+        cargarTablaClientes();
     }
 
     /**
@@ -45,12 +58,13 @@ public class IFClientes extends javax.swing.JInternalFrame {
         jPanel2 = new javax.swing.JPanel();
         btnGrabar = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblClientes = new javax.swing.JTable();
 
+        setClosable(true);
+        setResizable(true);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -170,16 +184,21 @@ public class IFClientes extends javax.swing.JInternalFrame {
         jPanel2.add(btnGrabar, gridBagConstraints);
 
         btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel2.add(btnActualizar, gridBagConstraints);
 
-        btnEliminar.setText("Eliminar");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel2.add(btnEliminar, gridBagConstraints);
-
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel2.add(btnLimpiar, gridBagConstraints);
@@ -213,6 +232,9 @@ public class IFClientes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtDireccionActionPerformed
 
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
+        if(this.clienteActualizar != null){
+            return;
+        }
         if(this.txtNombre.getText().isBlank() || !validarTexto(this.txtNombre.getText())){
              JOptionPane.showMessageDialog(null, "Ingerese un nombre valido.");
             return;
@@ -233,8 +255,20 @@ public class IFClientes extends javax.swing.JInternalFrame {
             return;
         }
         
+        if(this.txtDireccion.getText().isBlank()){
+            JOptionPane.showMessageDialog(null, "Ingerese una direccion valida.");
+            return;
+        }
+                
         
         ClienteJpaController clienteJpaController = new ClienteJpaController();
+        
+        if(clienteJpaController.findClienteByCedula(this.txtCedula.getText()) != null){
+            JOptionPane.showMessageDialog(null, "Ya existe un cliente registrado con Cedula/DNI: "+txtCedula.getText());
+            return;
+        }
+        
+        clienteJpaController = new ClienteJpaController();
         Cliente cliente = new Cliente();
         cliente.setNombre(txtNombre.getText());
         cliente.setApellido(txtApellido.getText());
@@ -243,15 +277,69 @@ public class IFClientes extends javax.swing.JInternalFrame {
         cliente.setDireccion(txtDireccion.getText());
         clienteJpaController.create(cliente);
         if(cliente.getIdCliente() == null){
-            JOptionPane.showMessageDialog(null, "Error no se registar al cliente.");
+            JOptionPane.showMessageDialog(null, "Error no se registar al cliente.");            
             return;
         }
         JOptionPane.showMessageDialog(null, "Cliente registrado correctamente.");
-        
+        cargarTablaClientes();
     }//GEN-LAST:event_btnGrabarActionPerformed
 
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        if(this.clienteActualizar == null){
+            JOptionPane.showMessageDialog(null, "Seleccione un cliente de la tabla.");            
+            return;
+        }
+        
+        if (this.txtNombre.getText().isBlank() || !validarTexto(this.txtNombre.getText())) {
+            JOptionPane.showMessageDialog(null, "Ingerese un nombre valido.");
+            return;
+        }
+
+        if (this.txtApellido.getText().isBlank() || !validarTexto(this.txtApellido.getText())) {
+            JOptionPane.showMessageDialog(null, "Ingerese un apellido valido.");
+            return;
+        }
+
+        if (this.txtCedula.getText().isBlank() || !this.txtCedula.getText().matches("\\d{9}")) {
+            JOptionPane.showMessageDialog(null, "Ingerese una cedula/DNI valido.");
+            return;
+        }
+
+        if (!this.txtTelefono.getText().isBlank() && !this.txtTelefono.getText().matches("\\d{9,15}")) {
+            JOptionPane.showMessageDialog(null, "Ingerese un número de telefono valido.");
+            return;
+        }
+        
+        if (this.txtDireccion.getText().isBlank()) {
+            JOptionPane.showMessageDialog(null, "Ingerese una direccion valida.");
+            return;
+        }
+        
+        ClienteJpaController clienteJpaController = new ClienteJpaController();
+        try {
+            clienteJpaController.edit(this.clienteActualizar); 
+            this.clienteActualizar = null;
+            this.cargarTablaClientes();
+        } catch (Exception ex) {
+            Logger.getLogger(IFClientes.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error: no se puedo realizar la actualizacion.");
+        }finally{
+            clienteJpaController.close();
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        this.txtNombre.setText("");
+        this.txtApellido.setText("");
+        this.txtCedula.setText("");
+        this.txtTelefono.setText("");
+        this.txtDireccion.setText("");
+        this.cargarTablaClientes();
+        this.clienteActualizar = null;
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
     /**
-     * Valida si un texto contenga letras y espacio. 
+     * Valida si que texto contenga letras y espacio. 
      * pero solo puede empezar con letras.
      * @param texto
      * @return 
@@ -260,9 +348,132 @@ public class IFClientes extends javax.swing.JInternalFrame {
         return texto.matches("[a-zA-Z][a-zA-Z ]*");
     }
 
+    public void cargarTablaClientes(){
+        ClienteJpaController clienteJpaController = new ClienteJpaController();
+        List<Cliente> listaClientes = clienteJpaController.findClienteEntities();
+        
+        DefaultTableModel defaultTableModel = new DefaultTableModel();
+        this.tblClientes = new JTable(defaultTableModel);
+        this.jScrollPane1.setViewportView(this.tblClientes);
+        
+        defaultTableModel.addColumn("idCliente");
+        defaultTableModel.addColumn("Nombre");
+        defaultTableModel.addColumn("Apellido");
+        defaultTableModel.addColumn("Cedula/DNI");
+        defaultTableModel.addColumn("Telefono");
+        defaultTableModel.addColumn("Direccion");
+        defaultTableModel.addColumn("Estado");
+        defaultTableModel.addColumn("Accion");
+        
+        listaClientes.forEach((Cliente cliente) -> {
+            
+            Object fila[] = new Object[8];
+            fila[0] = cliente.getIdCliente();
+            fila[1] = cliente.getNombre();
+            fila[2] = cliente.getApellido();
+            fila[3] = cliente.getCedula();
+            fila[4] = cliente.getTelefono();
+            fila[5] = cliente.getDireccion();
+            fila[6] = cliente.getEstado();
+
+            defaultTableModel.addRow(fila);
+            
+        });
+        clienteJpaController.close();
+        
+        
+                TableActionEvent tableActionEvent = new TableActionEvent() {
+            @Override
+            public void onEdit(int row) {
+                //sin inplementacion               
+            }
+
+            @Override
+            public void onDelete(int row) {
+                System.out.println(row);
+                
+                String[] options = { "Eliminar", "Cancelar"};
+                int response = JOptionPane.showOptionDialog(null, "¿Esta seguro de eliminar el cliente seleccionado?", null, 
+                                            JOptionPane.DEFAULT_OPTION, 
+                                            JOptionPane.WARNING_MESSAGE, 
+                                            null, options, null);
+                if(response == 0){
+                    int idCliente = (int) tblClientes.getModel().getValueAt(row, 0);
+                   // eliminarUsuario(idUsuario);
+                   deleteCliente(idCliente);
+                    cargarTablaClientes();
+                }
+                
+            }
+
+            @Override
+            public void onView(int row) {
+                System.out.println(row);
+            }
+        };
+        tblClientes.setRowHeight(35);
+        tblClientes.getColumnModel().getColumn(7).setCellRenderer(new TableDeleteActionCellRender());
+        tblClientes.getColumnModel().getColumn(7).setCellEditor(new DeleteCellEditor(tableActionEvent));
+        eventoSeleccionarTabla();
+        
+    }
+    
+    private void deleteCliente(int idCliente){
+        
+        ClienteJpaController clienteJpaController = new ClienteJpaController();
+        try {
+            clienteJpaController.destroy(idCliente);
+            this.clienteActualizar = null;
+        } catch (NonexistentEntityException ex) {
+            JOptionPane.showMessageDialog(null, "¡Error al eliminar cliente!");
+            Logger.getLogger(IFClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            clienteJpaController.close();
+        }
+    }
+    
+    private void filaDeTablaSeleccionada(){
+        int filaSeleccionada = this.tblClientes.getSelectedRow();
+        if(filaSeleccionada >= 0){
+           String columnaId = this.tblClientes.getValueAt(filaSeleccionada, 0).toString();
+           String columnaNombre = this.tblClientes.getValueAt(filaSeleccionada, 1).toString();
+           String columnaApellido = this.tblClientes.getValueAt(filaSeleccionada, 2).toString();
+           String columnaCedula = this.tblClientes.getValueAt(filaSeleccionada, 3).toString();
+           String columnaTelefono = this.tblClientes.getValueAt(filaSeleccionada, 4).toString();
+           String columnaDireccion = this.tblClientes.getValueAt(filaSeleccionada, 5).toString();
+           String columnaEstado = this.tblClientes.getValueAt(filaSeleccionada, 6).toString();
+           
+           this.txtNombre.setText(columnaNombre);
+           this.txtApellido.setText(columnaApellido);
+           this.txtCedula.setText(columnaCedula);
+           this.txtTelefono.setText(columnaTelefono);
+           this.txtDireccion.setText(columnaDireccion);
+
+           this.clienteActualizar = new Cliente();
+           clienteActualizar.setIdCliente(Integer.parseInt(columnaId));
+           clienteActualizar.setNombre(columnaNombre);
+           clienteActualizar.setApellido(columnaApellido);
+           clienteActualizar.setCedula(columnaCedula);
+           clienteActualizar.setTelefono(columnaTelefono);
+           clienteActualizar.setDireccion(columnaDireccion);
+           clienteActualizar.setEstado(Integer.parseInt(columnaEstado));           
+        }
+    }
+    
+    private void eventoSeleccionarTabla() {
+        // Agregar un ListSelectionListener a la tabla
+        this.tblClientes.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    filaDeTablaSeleccionada();
+                }
+            }
+        });
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
-    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGrabar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JLabel jLabel1;

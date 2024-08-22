@@ -1,10 +1,12 @@
 com\simple\app\vistas\interfaces\TableActionEvent.class
+com\simple\app\vistas\IFFacturacion$4.class
 com\simple\app\vistas\FrmMenu$10.class
 com\simple\app\vistas\FrmMenu$5.class
 com\simple\app\vistas\InterUsuario.class
 com\simple\app\vistas\FrmMenu$8.class
 com\simple\app\vistas\FrmMenu$13.class
 com\simple\app\dao\exceptions\PreexistingEntityException.class
+com\simple\app\vistas\IFFacturacion$1.class
 com\simple\app\vistas\FrmLogin$2.class
 com\simple\app\vistas\IFGestionProductos$3.class
 com\simple\app\vistas\FrmMenu$16.class
@@ -12,6 +14,8 @@ com\simple\app\vistas\custom\ActionButton$1.class
 com\simple\app\dao\exceptions\NonexistentEntityException.class
 com\simple\app\vistas\GestionDeCategorias$3.class
 com\simple\app\vistas\IFClientes$2.class
+com\simple\app\vistas\IFFacturacion.class
+com\simple\app\vistas\IFClientes$5.class
 com\simple\app\vistas\GestionDeCategorias$1.class
 com\simple\app\vistas\FrmMenu$3.class
 com\simple\app\config\HibernateConfig.class
@@ -39,6 +43,7 @@ com\simple\app\vistas\InterGestionarUsuario$1.class
 com\simple\app\vistas\FrmMenu$14.class
 com\simple\app\vistas\IFGestionProductos$4.class
 com\simple\app\vistas\InterUsuario$2.class
+com\simple\app\vistas\IFClientes$3.class
 com\simple\app\vistas\IFGestionProductos.class
 com\simple\app\vistas\custom\TableActionCellRender.class
 com\simple\app\dao\CabeceraVentaJpaController.class
@@ -46,6 +51,7 @@ com\simple\app\SistemasVentasV1$1.class
 com\simple\app\vistas\IFGestionProductos$1.class
 com\simple\app\modelo\Cliente.class
 com\simple\app\dao\CategoriaJpaController.class
+com\simple\app\vistas\IFClientes$6.class
 com\simple\app\vistas\FrmLogin$3.class
 com\simple\app\modelo\DetalleVenta.class
 com\simple\app\vistas\custom\OptionPanel$2.class
@@ -53,6 +59,7 @@ com\simple\app\dao\ProductoJpaController.class
 com\simple\app\modelo\Categoria.class
 com\simple\app\vistas\custom\ActionButton.class
 com\simple\app\vistas\custom\DeletePanel.class
+com\simple\app\vistas\IFFacturacion$2.class
 com\simple\app\vistas\FrmMenu$1.class
 com\simple\app\vistas\FrmMenu$7.class
 com\simple\app\vistas\FrmMenu$4.class
@@ -63,8 +70,10 @@ com\simple\app\dao\UsuarioJpaController.class
 com\simple\app\vistas\IFGestionProductos$2.class
 com\simple\app\vistas\GestionDeCategorias$4.class
 com\simple\app\vistas\custom\DeleteCellEditor.class
+com\simple\app\vistas\IFClientes$4.class
 com\simple\app\vistas\FrmMenu$11.class
 com\simple\app\vistas\FrmMenu$6.class
+com\simple\app\vistas\IFFacturacion$3.class
 com\simple\app\vistas\IFClientes.class
 com\simple\app\SistemasVentasV1.class
 com\simple\app\vistas\models\ProductoTableModel.class
