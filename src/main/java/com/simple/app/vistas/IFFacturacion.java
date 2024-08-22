@@ -5,8 +5,13 @@
 package com.simple.app.vistas;
 
 import com.simple.app.dao.ClienteJpaController;
+import com.simple.app.dao.ProductoJpaController;
 import com.simple.app.modelo.Cliente;
+import com.simple.app.modelo.DetalleVenta;
+import com.simple.app.modelo.Producto;
 import java.awt.BorderLayout;
+import java.awt.HeadlessException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -25,12 +30,17 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
 
     
     private Cliente clienteSeleccionado = null;
+    private List<Producto> listaProductosSelecionados;
+    private List<DetalleVenta> listaDetalleVentas;
     
     /**
      * Creates new form IFFacturacion
      */
     public IFFacturacion() {
+        this.setSize(600, 800);
         initComponents();
+        this.listaProductosSelecionados = new ArrayList<>();
+        this.listaDetalleVentas = new ArrayList<>(); 
     }
 
     /**
@@ -76,6 +86,9 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jFormattedTextField6 = new javax.swing.JFormattedTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        txtNombreClienteVista = new javax.swing.JTextField();
+        txtCedulaClienteVista = new javax.swing.JTextField();
 
         setClosable(true);
         setResizable(true);
@@ -151,6 +164,11 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jPanel7.add(txtNombreProducto, gridBagConstraints);
 
         btnBuscarProducto.setText("Buscar");
+        btnBuscarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarProductoActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
         jPanel7.add(btnBuscarProducto, gridBagConstraints);
@@ -167,13 +185,13 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nro", "Nombre", "Cantidad", "P. Unitario", "Subtotal", "Descuento", "Impuesto", "Total a pagar", "Accion"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -189,6 +207,8 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Subtotal:");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 6);
         jPanel9.add(jLabel1, gridBagConstraints);
@@ -196,7 +216,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jLabel2.setText("Descuento:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 6);
         jPanel9.add(jLabel2, gridBagConstraints);
@@ -204,7 +224,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jLabel3.setText("Impuestos:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 6);
         jPanel9.add(jLabel3, gridBagConstraints);
@@ -212,7 +232,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jLabel4.setText("Total:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 6);
         jPanel9.add(jLabel4, gridBagConstraints);
@@ -220,7 +240,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jLabel5.setText("Efectivo:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 6);
         jPanel9.add(jLabel5, gridBagConstraints);
@@ -228,55 +248,57 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jLabel6.setText("Cambio:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 6);
         jPanel9.add(jLabel6, gridBagConstraints);
 
         jFormattedTextField1.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
         jPanel9.add(jFormattedTextField1, gridBagConstraints);
 
         jFormattedTextField2.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
         jPanel9.add(jFormattedTextField2, gridBagConstraints);
 
         jFormattedTextField3.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
         jPanel9.add(jFormattedTextField3, gridBagConstraints);
 
         jFormattedTextField4.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
         jPanel9.add(jFormattedTextField4, gridBagConstraints);
 
         jFormattedTextField5.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
         jPanel9.add(jFormattedTextField5, gridBagConstraints);
 
         jFormattedTextField6.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
         jPanel9.add(jFormattedTextField6, gridBagConstraints);
 
         jButton1.setText("Registrar venta");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -286,12 +308,38 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jButton2.setText("Calcular cambio");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         jPanel9.add(jButton2, gridBagConstraints);
+
+        jLabel7.setText("Cliente:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 45, 6);
+        jPanel9.add(jLabel7, gridBagConstraints);
+
+        txtNombreClienteVista.setEditable(false);
+        txtNombreClienteVista.setEnabled(false);
+        txtNombreClienteVista.setPreferredSize(new java.awt.Dimension(160, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 45, 5);
+        jPanel9.add(txtNombreClienteVista, gridBagConstraints);
+
+        txtCedulaClienteVista.setEditable(false);
+        txtCedulaClienteVista.setEnabled(false);
+        txtCedulaClienteVista.setMinimumSize(new java.awt.Dimension(120, 22));
+        txtCedulaClienteVista.setPreferredSize(new java.awt.Dimension(120, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 45, 5);
+        jPanel9.add(txtCedulaClienteVista, gridBagConstraints);
 
         getContentPane().add(jPanel9);
 
@@ -304,7 +352,18 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Ingrese una Cedula/DNI");
             return;
         }
-        createPopupClientes(this.txtCedula.getText().trim());
+        
+        if(this.rbOpcionApellido.isSelected()){
+            
+            createPopupClientes(this.txtCedula.getText().trim(), "apellido");
+        }else if(this.rbOpcionNombre.isSelected()){
+            
+            createPopupClientes(this.txtCedula.getText().trim(), "nombre");
+            
+        }else{
+            createPopupClientes(this.txtCedula.getText().trim(), "cedula");
+        }
+        
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     private void txtCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCedulaActionPerformed
@@ -315,22 +374,22 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_rbOpcionDniActionPerformed
 
-    private void btnSeleccionarClienteActionPerformed(java.awt.event.ActionEvent evt) {
-
-        if (this.txtCedula.getText().isBlank()) {
-            JOptionPane.showMessageDialog(null, "Ingrese una Cedula/DNI");
+    private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
+        if(this.txtNombreProducto.getText().isBlank()){
+            JOptionPane.showMessageDialog(null, "Ingrese nombre de producto.");
             return;
         }
-        createPopupClientes(this.txtCedula.getText().trim());
-    }
+        createPopupProductos(this.txtNombreProducto.getText());
+    }//GEN-LAST:event_btnBuscarProductoActionPerformed
+
     
     
     
-    private void createPopupClientes(String data) {
+    private void createPopupClientes(String data,String opcion) {
         // Create the table model and JTable
         String[] columnNames = {"Nombre", "Apellido", "Cedula/DNI"};
         ClienteJpaController clienteJpaController = new ClienteJpaController();
-        List<Cliente> listaClientes = clienteJpaController.findClientesByOptions(data, "cedula");
+        List<Cliente> listaClientes = clienteJpaController.findClientesByOptions(data, opcion);
         if(listaClientes == null) {
             JOptionPane.showMessageDialog(null, "Sin resultados");
             return;
@@ -362,6 +421,8 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
                 int filaSeleccionada = table.getSelectedRow();
                 if(filaSeleccionada >= 0){
                     clienteSeleccionado =  listaClientes.get(filaSeleccionada);
+                    txtNombreClienteVista.setText(clienteSeleccionado.getNombre());
+                    txtCedulaClienteVista.setText(clienteSeleccionado.getCedula());
                     popup.dispose();
                 }                                
             }
@@ -383,7 +444,93 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         popup.pack();
         popup.setLocationRelativeTo(this);
         popup.setVisible(true);
-        System.out.println("................Proceso Termiando: "+clienteSeleccionado.getNombre());
+        //System.out.println("................Proceso Termiando: "+clienteSeleccionado.getNombre());
+    }
+    
+    
+    private void createPopupProductos(String nombreProducto) {
+        // Create the table model and JTable
+        String[] columnNames = {"Nombre", "Precio","Stock" ,"Ingrese Cantidad"};
+        ProductoJpaController productoJpaController = new ProductoJpaController();
+        List<Producto> listaProducto = productoJpaController.findProductosByName(nombreProducto);
+        if (listaProducto == null) {
+            JOptionPane.showMessageDialog(null, "Sin resultados");
+            return;
+        }
+
+        if (listaProducto.size() == 0) {
+            JOptionPane.showMessageDialog(null, "Sin resultados");
+            return;
+        }
+        
+        Object[][] rowData = new Object[listaProducto.size()][4];
+
+        for (int i = 0; i < listaProducto.size(); i++) {
+            rowData[i] = new Object[]{
+                listaProducto.get(i).getNombre(),
+                listaProducto.get(i).getPrecio(),
+                listaProducto.get(i).getCantidad(),
+                1
+            };
+        }
+
+        // Create the popup window
+        JDialog popup = new JDialog((JFrame) null, "Seleccionar Producto", true);
+        DefaultTableModel tableModel = new DefaultTableModel(rowData, columnNames);
+        JTable table = new JTable(tableModel);
+        JButton btnSeleccionar = new JButton("Seleccionar Producto");
+        btnSeleccionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                int filaSeleccionada = table.getSelectedRow();
+                if (filaSeleccionada >= 0) {
+                    Producto productoSelecionado = listaProducto.get(filaSeleccionada);
+                    String cantidadString = table.getValueAt(filaSeleccionada, 3).toString();
+                    int cantidadNumerica = 1;
+                    try{
+                        cantidadNumerica = Integer.parseInt(cantidadString);
+                        if(cantidadNumerica > productoSelecionado.getCantidad()){
+                            JOptionPane.showMessageDialog(null, "La cantidad Ingresada supera el stock actual.");
+                            return;
+                        }
+                    }catch(HeadlessException | NumberFormatException e){
+                        cantidadNumerica = 1;
+                    }                    
+                    generarDetalleVenta(productoSelecionado, cantidadNumerica);
+                    popup.dispose();
+                }
+            }
+        }
+        );
+
+        // Add the JTable to a JScrollPane
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        // Create the main content panel and add the scroll pane
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BorderLayout());
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
+        contentPanel.add(btnSeleccionar, BorderLayout.PAGE_END);
+
+        popup.setContentPane(contentPanel);
+        popup.pack();
+        popup.setLocationRelativeTo(this);
+        popup.setVisible(true);
+        //System.out.println("................Proceso Termiando: "+clienteSeleccionado.getNombre());
+    }
+    
+    private void generarDetalleVenta(Producto producto, int cantidad){
+        listaProductosSelecionados.add(producto);
+        
+        double descuento = 0.0;
+        double iva_impuesto = (producto.getPrecio() * cantidad) * producto.getPorcentajeIva();
+        double subtotal = producto.getPrecio() * cantidad;
+        double totalPagar = subtotal + iva_impuesto + descuento;
+
+        //redondear decimales
+        subtotal = (double) Math.round(subtotal * 100) / 100;
+        double iva = (double) Math.round(iva_impuesto * 100) / 100;
+        descuento = (double) Math.round(descuento * 100) / 100;
+        totalPagar = (double) Math.round(totalPagar * 100) / 100;
     }
     
 
@@ -405,6 +552,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -420,6 +568,8 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
     private javax.swing.JRadioButton rbOpcionDni;
     private javax.swing.JRadioButton rbOpcionNombre;
     private javax.swing.JTextField txtCedula;
+    private javax.swing.JTextField txtCedulaClienteVista;
+    private javax.swing.JTextField txtNombreClienteVista;
     private javax.swing.JTextField txtNombreProducto;
     // End of variables declaration//GEN-END:variables
 }

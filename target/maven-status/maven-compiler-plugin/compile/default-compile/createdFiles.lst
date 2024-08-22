@@ -17,6 +17,7 @@ com\simple\app\vistas\IFClientes$2.class
 com\simple\app\vistas\IFFacturacion.class
 com\simple\app\vistas\IFClientes$5.class
 com\simple\app\vistas\GestionDeCategorias$1.class
+com\simple\app\vistas\IFFacturacion$6.class
 com\simple\app\vistas\FrmMenu$3.class
 com\simple\app\config\HibernateConfig.class
 com\simple\app\dao\exceptions\IllegalOrphanException.class
@@ -55,6 +56,7 @@ com\simple\app\vistas\IFClientes$6.class
 com\simple\app\vistas\FrmLogin$3.class
 com\simple\app\modelo\DetalleVenta.class
 com\simple\app\vistas\custom\OptionPanel$2.class
+com\simple\app\vistas\IFFacturacion$5.class
 com\simple\app\dao\ProductoJpaController.class
 com\simple\app\modelo\Categoria.class
 com\simple\app\vistas\custom\ActionButton.class
