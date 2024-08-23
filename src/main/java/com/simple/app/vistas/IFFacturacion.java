@@ -9,6 +9,7 @@ import com.simple.app.dao.ProductoJpaController;
 import com.simple.app.modelo.Cliente;
 import com.simple.app.modelo.DetalleVenta;
 import com.simple.app.modelo.Producto;
+import com.simple.app.vistas.models.DetalleVentaTableModel;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
     private Cliente clienteSeleccionado = null;
     private List<Producto> listaProductosSelecionados;
     private List<DetalleVenta> listaDetalleVentas;
+    private DetalleVentaTableModel detalleVentaTableModel;
     
     /**
      * Creates new form IFFacturacion
@@ -70,7 +72,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jPanel8 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblDetalleVentas = new javax.swing.JTable();
         jPanel9 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -183,7 +185,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Detalles"));
         jPanel4.setLayout(new java.awt.BorderLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblDetalleVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null},
@@ -194,7 +196,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
                 "Nro", "Nombre", "Cantidad", "P. Unitario", "Subtotal", "Descuento", "Impuesto", "Total a pagar", "Accion"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblDetalleVentas);
 
         jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -493,6 +495,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
                             return;
                         }
                     }catch(HeadlessException | NumberFormatException e){
+                        System.out.println(e.getMessage());
                         cantidadNumerica = 1;
                     }                    
                     generarDetalleVenta(productoSelecionado, cantidadNumerica);
@@ -531,6 +534,25 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         double iva = (double) Math.round(iva_impuesto * 100) / 100;
         descuento = (double) Math.round(descuento * 100) / 100;
         totalPagar = (double) Math.round(totalPagar * 100) / 100;
+        
+        DetalleVenta detalleVenta = new DetalleVenta();
+        detalleVenta.setIdCabeceraVenta(1);
+        detalleVenta.setIdProducto(producto.getIdProducto());
+        detalleVenta.setCantidad(cantidad);
+        detalleVenta.setPrecioUnitario(producto.getPrecio());
+        detalleVenta.setSubTotal(subtotal);
+        detalleVenta.setDescuento(descuento);
+        detalleVenta.setIva(iva);
+        detalleVenta.setTotalPagar(totalPagar);
+        detalleVenta.setEstado(1);
+        
+        this.listaDetalleVentas.add(detalleVenta);
+        this.listaProductosSelecionados.add(producto);
+        
+        this.detalleVentaTableModel = new DetalleVentaTableModel(listaDetalleVentas, listaProductosSelecionados);
+        this.tblDetalleVentas.setModel(detalleVentaTableModel);
+        
+        
     }
     
 
@@ -563,10 +585,10 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JRadioButton rbOpcionApellido;
     private javax.swing.JRadioButton rbOpcionDni;
     private javax.swing.JRadioButton rbOpcionNombre;
+    private javax.swing.JTable tblDetalleVentas;
     private javax.swing.JTextField txtCedula;
     private javax.swing.JTextField txtCedulaClienteVista;
     private javax.swing.JTextField txtNombreClienteVista;

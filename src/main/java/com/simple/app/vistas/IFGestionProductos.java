@@ -58,13 +58,13 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
         txtNombre = new javax.swing.JTextField();
         spCantidad = new javax.swing.JSpinner();
         ftxtPrecio = new javax.swing.JFormattedTextField();
-        ftxtImpuestos = new javax.swing.JFormattedTextField();
         cbCategorias = new javax.swing.JComboBox<Categoria>();
         jScrollPane1 = new javax.swing.JScrollPane();
         taDescripcion = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
+        cbImpuestos = new javax.swing.JComboBox<>();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblProductos = new javax.swing.JTable();
@@ -136,7 +136,7 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
         jPanel2.add(spCantidad, gridBagConstraints);
 
         ftxtPrecio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
@@ -144,16 +144,8 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
-        jPanel2.add(ftxtPrecio, gridBagConstraints);
-
-        ftxtImpuestos.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
-        jPanel2.add(ftxtImpuestos, gridBagConstraints);
+        jPanel2.add(ftxtPrecio, gridBagConstraints);
 
         cbCategorias.setModel(new CategoriaComboModel());
         cbCategorias.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -205,6 +197,14 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 5;
         jPanel2.add(btnActualizar, gridBagConstraints);
+
+        cbImpuestos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "No desgrava", "8", "10", "12" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        jPanel2.add(cbImpuestos, gridBagConstraints);
 
         jPanel1.add(jPanel2, java.awt.BorderLayout.PAGE_START);
 
@@ -266,7 +266,17 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
 
         // Obtener el valor del primer JFormattedTextField (Precio)
         Double precio = Double.parseDouble(String.valueOf(this.ftxtPrecio.getValue()));
-        Integer impuesto = Integer.parseInt(String.valueOf((this.ftxtImpuestos.getValue())));
+        Integer impuesto = 0;
+        
+        switch(this.cbImpuestos.getSelectedIndex()){
+            case 1:
+            case 2:
+            case 3:    
+                impuesto = Integer.parseInt(this.cbImpuestos.getSelectedItem().toString());
+                break;
+            default:
+                impuesto = 0;
+        }
 
         // Obtener el valor del segundo JFormattedTextField (Cantidad)
         int cantidad = (int) this.spCantidad.getValue();
@@ -307,7 +317,17 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
         ProductoJpaController productoJpaController = new ProductoJpaController();
         // Obtener el valor del primer JFormattedTextField (Precio)
         Double precio = Double.parseDouble(String.valueOf(this.ftxtPrecio.getValue()));
-        Integer impuesto = Integer.parseInt(String.valueOf((this.ftxtImpuestos.getValue())));
+        Integer impuesto = 0;
+        
+        switch (this.cbImpuestos.getSelectedIndex()) {
+            case 1:
+            case 2:
+            case 3:
+                impuesto = Integer.parseInt(this.cbImpuestos.getSelectedItem().toString());
+                break;
+            default:
+                impuesto = 0;
+        }
 
         // Obtener el valor del segundo JFormattedTextField (Cantidad)
         int cantidad = (int) this.spCantidad.getValue();
@@ -350,14 +370,14 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnActualizarActionPerformed
 
 
-        private void cargarTablaProductos(){
-        
+    private void cargarTablaProductos() {
+
         ProductoJpaController productoJpaController = new ProductoJpaController();
-        List<Producto> listaProductos = productoJpaController.findProductoEntities(); 
+        List<Producto> listaProductos = productoJpaController.findProductoEntities();
         productoJpaController.close();
         ProductoTableModel model = new ProductoTableModel(listaProductos);
         this.tblProductos.setModel(model);
-        
+
         TableActionEvent tableActionEvent = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
@@ -375,7 +395,7 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
                         null, options, null);
                 if (response == 0) {
                     //int idCategoria = (int) tblCategorias.getModel().getValueAt(row, 0);
-                    Producto productoSelecionado = ((ProductoTableModel)tblProductos.getModel()).getProductoAt(row);                   
+                    Producto productoSelecionado = ((ProductoTableModel) tblProductos.getModel()).getProductoAt(row);
                     deleteProducto(productoSelecionado.getIdProducto());
                     cargarTablaProductos();
                 }
@@ -387,11 +407,11 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
                 System.out.println(row);
             }
         };
-        
+
         tblProductos.setRowHeight(35);
         tblProductos.getColumnModel().getColumn(8).setCellRenderer(new TableDeleteActionCellRender());
         tblProductos.getColumnModel().getColumn(8).setCellEditor(new DeleteCellEditor(tableActionEvent));
-        
+
     }
     
     private void cargarCategorias(){
@@ -406,12 +426,13 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
     
     
     private void initDefaultValues(){
-        this.ftxtImpuestos.setValue(0);
+        this.cbImpuestos.setSelectedIndex(0);
         this.ftxtPrecio.setValue(0);
         this.taDescripcion.setText("");
         this.txtNombre.setText("");
         this.cargarCategorias();
         this.spCantidad.setValue(1);
+        this.cbImpuestos.setSelectedIndex(0);
     }
     
     private void deleteProducto(int idProducto){
@@ -435,8 +456,8 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
         }
         Producto producto = ((ProductoTableModel)this.tblProductos.getModel()).getProductoAt(filaSeleccionada);
         this.txtNombre.setText(producto.getNombre());
-        this.ftxtPrecio.setValue(producto.getPrecio());
-        this.ftxtImpuestos.setValue(producto.getPorcentajeIva());
+        this.ftxtPrecio.setValue(producto.getPrecio());        
+        this.cbImpuestos.setSelectedItem(producto.getPorcentajeIva());
         this.spCantidad.setValue(producto.getCantidad());
         this.taDescripcion.setText(producto.getDescripcion());
         
@@ -449,7 +470,20 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
                 System.out.println("ID categoria: "+categoria.getIdCategoria());
                 break;
             }            
-        }       
+        } 
+        
+        for (int i = 0; i < cbImpuestos.getItemCount(); i++) {
+            if (i == 0) {
+                cbImpuestos.setSelectedIndex(0);
+            } else {
+                int valueInCombo = Integer.parseInt(cbImpuestos.getItemAt(i).toString());
+                if(valueInCombo == producto.getPorcentajeIva()){
+                  cbImpuestos.setSelectedIndex(i);
+                  cbImpuestos.updateUI();
+                  break;
+                }                
+            }
+        }
         
     }
     
@@ -470,7 +504,7 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox<Categoria> cbCategorias;
-    private javax.swing.JFormattedTextField ftxtImpuestos;
+    private javax.swing.JComboBox<String> cbImpuestos;
     private javax.swing.JFormattedTextField ftxtPrecio;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

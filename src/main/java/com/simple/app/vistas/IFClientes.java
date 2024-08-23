@@ -315,6 +315,12 @@ public class IFClientes extends javax.swing.JInternalFrame {
             return;
         }
         
+        this.clienteActualizar.setNombre(txtNombre.getText());
+        this.clienteActualizar.setApellido(this.txtApellido.getText());
+        this.clienteActualizar.setCedula(this.txtCedula.getText());
+        this.clienteActualizar.setDireccion(this.txtDireccion.getText());
+        this.clienteActualizar.setTelefono(this.txtTelefono.getText());
+        
         ClienteJpaController clienteJpaController = new ClienteJpaController();
         try {
             clienteJpaController.edit(this.clienteActualizar); 

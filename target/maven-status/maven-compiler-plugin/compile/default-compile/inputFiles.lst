@@ -12,6 +12,7 @@ C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\si
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\exceptions\IllegalOrphanException.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\CabeceraVentaJpaController.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\IFGestionProductos.java
+C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\models\DetalleVentaTableModel.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\exceptions\NonexistentEntityException.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\dao\ProductoJpaController.java
 C:\Users\Lynkos\Documents\NetBeansProjects\SistemasVentasV1\src\main\java\com\simple\app\vistas\FrmLogin.java
