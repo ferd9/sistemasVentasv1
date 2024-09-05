@@ -69,11 +69,11 @@ public class DetalleVenta implements Serializable {
     
     //get and set
 
-    public int getIdDetalleVenta() {
+    public Integer getIdDetalleVenta() {
         return idDetalleVenta;
     }
 
-    public void setIdDetalleVenta(int idDetalleVenta) {
+    public void setIdDetalleVenta(Integer idDetalleVenta) {
         this.idDetalleVenta = idDetalleVenta;
     }
 

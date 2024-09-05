@@ -21,7 +21,7 @@ public class CabeceraVenta implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idCabeceraVenta")
-    private int idCabeceraventa;
+    private Integer idCabeceraventa;
     @Column
     private int idCliente;
     @Column
@@ -50,11 +50,11 @@ public class CabeceraVenta implements Serializable {
     
     //get and set 
 
-    public int getIdCabeceraventa() {
+    public Integer getIdCabeceraventa() {
         return idCabeceraventa;
     }
 
-    public void setIdCabeceraventa(int idCabeceraventa) {
+    public void setIdCabeceraventa(Integer idCabeceraventa) {
         this.idCabeceraventa = idCabeceraventa;
     }
 

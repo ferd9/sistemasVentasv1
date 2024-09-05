@@ -24,7 +24,7 @@ public class CabeceraVentaJpaController implements Serializable {
     
     private HibernateConfig hibernateConfig = null;
 
-    public CabeceraVentaJpaController(EntityManagerFactory emf) {
+    public CabeceraVentaJpaController() {
         this.hibernateConfig = new HibernateConfig(); 
     }   
 

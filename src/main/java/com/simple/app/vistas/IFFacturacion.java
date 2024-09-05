@@ -4,14 +4,22 @@
  */
 package com.simple.app.vistas;
 
+import com.simple.app.dao.CabeceraVentaJpaController;
 import com.simple.app.dao.ClienteJpaController;
+import com.simple.app.dao.DetalleVentaJpaController;
 import com.simple.app.dao.ProductoJpaController;
+import com.simple.app.modelo.CabeceraVenta;
 import com.simple.app.modelo.Cliente;
 import com.simple.app.modelo.DetalleVenta;
 import com.simple.app.modelo.Producto;
+import com.simple.app.vistas.custom.DeleteCellEditor;
+import com.simple.app.vistas.custom.TableDeleteActionCellRender;
+import com.simple.app.vistas.interfaces.TableActionEvent;
 import com.simple.app.vistas.models.DetalleVentaTableModel;
+import com.simple.app.vistas.models.ProductoTableModel;
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
@@ -86,8 +94,8 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jftTotal = new javax.swing.JFormattedTextField();
         jftEfectivo = new javax.swing.JFormattedTextField();
         jftCambio = new javax.swing.JFormattedTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnRegistrarVenta = new javax.swing.JButton();
+        btnCalcularCambio = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         txtNombreClienteVista = new javax.swing.JTextField();
         txtCedulaClienteVista = new javax.swing.JTextField();
@@ -297,7 +305,12 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
         jPanel9.add(jftCambio, gridBagConstraints);
 
-        jButton1.setText("Registrar venta");
+        btnRegistrarVenta.setText("Registrar venta");
+        btnRegistrarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarVentaActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
@@ -305,9 +318,14 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel9.add(jButton1, gridBagConstraints);
+        jPanel9.add(btnRegistrarVenta, gridBagConstraints);
 
-        jButton2.setText("Calcular cambio");
+        btnCalcularCambio.setText("Calcular cambio");
+        btnCalcularCambio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCalcularCambioActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 5;
@@ -315,7 +333,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel9.add(jButton2, gridBagConstraints);
+        jPanel9.add(btnCalcularCambio, gridBagConstraints);
 
         jLabel7.setText("Cliente:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -383,6 +401,73 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         }
         createPopupProductos(this.txtNombreProducto.getText());
     }//GEN-LAST:event_btnBuscarProductoActionPerformed
+
+    private void btnCalcularCambioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularCambioActionPerformed
+        
+        if(this.jftTotal.getValue() == null || this.jftEfectivo.getValue() == null){
+            return;
+        }
+        
+        double total =  Double.parseDouble(this.jftTotal.getValue().toString());
+        double efectivo = Double.parseDouble(this.jftEfectivo.getValue().toString());
+        
+        if(total > efectivo){
+            return;
+        }
+
+        if(total == efectivo){
+            this.jftCambio.setValue(0.0);
+        }
+        
+        double cambio = efectivo - total;
+        this.jftCambio.setValue(cambio);
+        
+    }//GEN-LAST:event_btnCalcularCambioActionPerformed
+
+    private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
+       if(this.clienteSeleccionado == null){
+           JOptionPane.showMessageDialog(null, "Selecciones un cliente");
+           return;
+       }
+       
+       if(this.listaDetalleVentas.isEmpty() && this.listaProductosSelecionados.isEmpty()){
+            JOptionPane.showMessageDialog(null, "No hay productos agregados.");
+           return;
+       }
+       
+        CabeceraVenta cabeceraVenta = new CabeceraVenta();
+        cabeceraVenta.setIdCliente(this.clienteSeleccionado.getIdCliente());
+        cabeceraVenta.setValorPagar(Double.parseDouble(this.jftTotal.getValue().toString()));
+        cabeceraVenta.setFechaVenta(LocalDate.now());
+        cabeceraVenta.setEstado(1);        
+        CabeceraVentaJpaController cabeceraVentaJpaController = new CabeceraVentaJpaController();
+        cabeceraVentaJpaController.create(cabeceraVenta);
+        cabeceraVentaJpaController.close();
+        if(cabeceraVenta.getIdCabeceraventa() == null){
+            JOptionPane.showMessageDialog(null, "Error al guardar cabecera de venta.");
+            return;
+        }
+        
+        this.listaDetalleVentas.forEach(detalleVenta -> {
+            detalleVenta.setIdCabeceraVenta(cabeceraVenta.getIdCabeceraventa());
+            DetalleVentaJpaController detalleVentaJpaController = new DetalleVentaJpaController();
+            detalleVentaJpaController.create(detalleVenta);
+            detalleVentaJpaController.close();
+        });
+
+        boolean listaGrabada = this.listaDetalleVentas.stream().allMatch(detalleVenta -> {
+         return detalleVenta.getIdDetalleVenta() != null;
+        });
+        
+        if(!listaGrabada){
+            JOptionPane.showMessageDialog(null, "Hubo un error al intentar grabar los detalles de venta.");
+            return;
+        }
+        
+        JOptionPane.showMessageDialog(null, "Venta generada correctamente.");
+        limpiarCampos();
+        
+    }//GEN-LAST:event_btnRegistrarVentaActionPerformed
 
     
     
@@ -529,8 +614,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         //System.out.println("................Proceso Termiando: "+clienteSeleccionado.getNombre());
     }
     
-    private void generarDetalleVenta(Producto producto, int cantidad){
-        listaProductosSelecionados.add(producto); 
+    private void generarDetalleVenta(Producto producto, int cantidad){       
         
         double descuento = 0.0;
         double iva_impuesto = (producto.getPrecio() * cantidad) * producto.getPorcentajeIva();
@@ -561,6 +645,43 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         this.detalleVentaTableModel = new DetalleVentaTableModel(listaDetalleVentas, listaProductosSelecionados);
         this.tblDetalleVentas.setModel(detalleVentaTableModel);
         
+        TableActionEvent tableActionEvent = new TableActionEvent() {
+            @Override
+            public void onEdit(int row) {
+                //sin inplementacion               
+            }
+
+            @Override
+            public void onDelete(int row) {
+                System.out.println(row);
+
+                String[] options = {"Eliminar", "Cancelar"};
+                int response = JOptionPane.showOptionDialog(null, "¿Esta seguro de eliminar el detalle seleccionado", null,
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.WARNING_MESSAGE,
+                        null, options, null);
+                if (response == 0) {                    
+                    listaProductosSelecionados.remove(row);
+                    listaDetalleVentas.remove(row);
+                    detalleVentaTableModel = new DetalleVentaTableModel(listaDetalleVentas,listaProductosSelecionados);
+                    tblDetalleVentas.setModel(detalleVentaTableModel);
+                    tblDetalleVentas.setRowHeight(35);
+                    tblDetalleVentas.getColumnModel().getColumn(8).setCellRenderer(new TableDeleteActionCellRender());
+                    tblDetalleVentas.getColumnModel().getColumn(8).setCellEditor(new DeleteCellEditor(this));
+                    calcularPagoFinal(listaDetalleVentas);
+                }
+
+            }
+
+            @Override
+            public void onView(int row) {
+                System.out.println(row);
+            }
+        };
+        
+        this.tblDetalleVentas.setRowHeight(35);
+        this.tblDetalleVentas.getColumnModel().getColumn(8).setCellRenderer(new TableDeleteActionCellRender());
+        this.tblDetalleVentas.getColumnModel().getColumn(8).setCellEditor(new DeleteCellEditor(tableActionEvent));
         
     }
     
@@ -583,6 +704,63 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         this.jftImpuestos.setValue(iva_impuesto);
         this.jftTotal.setValue(totalPagar);
         
+    }
+
+    private void limpiarCampos(){
+        
+        this.clienteSeleccionado = null;
+        this.listaDetalleVentas.clear();
+        this.listaProductosSelecionados.clear();
+        
+        this.txtNombreClienteVista.setText("");
+        this.txtCedulaClienteVista.setText("");
+        
+        this.detalleVentaTableModel = new DetalleVentaTableModel(listaDetalleVentas, listaProductosSelecionados);
+        this.tblDetalleVentas.setModel(detalleVentaTableModel);
+        
+         TableActionEvent tableActionEvent = new TableActionEvent() {
+            @Override
+            public void onEdit(int row) {
+                //sin inplementacion               
+            }
+
+            @Override
+            public void onDelete(int row) {
+                System.out.println(row);
+
+                String[] options = {"Eliminar", "Cancelar"};
+                int response = JOptionPane.showOptionDialog(null, "¿Esta seguro de eliminar el detalle seleccionado", null,
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.WARNING_MESSAGE,
+                        null, options, null);
+                if (response == 0) {                    
+                    listaProductosSelecionados.remove(row);
+                    listaDetalleVentas.remove(row);
+                    detalleVentaTableModel = new DetalleVentaTableModel(listaDetalleVentas,listaProductosSelecionados);
+                    tblDetalleVentas.setModel(detalleVentaTableModel);
+                    tblDetalleVentas.setRowHeight(35);
+                    tblDetalleVentas.getColumnModel().getColumn(8).setCellRenderer(new TableDeleteActionCellRender());
+                    tblDetalleVentas.getColumnModel().getColumn(8).setCellEditor(new DeleteCellEditor(this));
+                    calcularPagoFinal(listaDetalleVentas);
+                }
+
+            }
+
+            @Override
+            public void onView(int row) {
+                System.out.println(row);
+            }
+        };
+        
+        this.tblDetalleVentas.setRowHeight(35);
+        this.tblDetalleVentas.getColumnModel().getColumn(8).setCellRenderer(new TableDeleteActionCellRender());
+        this.tblDetalleVentas.getColumnModel().getColumn(8).setCellEditor(new DeleteCellEditor(tableActionEvent));
+        
+        
+        this.jftSubtotal.setValue(0.0);
+        this.jftDescuento.setValue(0.0);
+        this.jftImpuestos.setValue(0.0);
+        this.jftTotal.setValue(0.0);
     }    
    
     
@@ -591,8 +769,8 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
     private javax.swing.ButtonGroup bgOpcionesBusquedaCliente;
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarProducto;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnCalcularCambio;
+    private javax.swing.JButton btnRegistrarVenta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

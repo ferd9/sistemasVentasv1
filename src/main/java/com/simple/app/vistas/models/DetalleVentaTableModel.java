@@ -100,4 +100,25 @@ public class DetalleVentaTableModel extends AbstractTableModel {
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
     
+    
+    public DetalleVenta getProductoAt(int row){
+        return this.listaDetalleVenta.get(row);
+    }
+
+    public List<DetalleVenta> getListaDetalleVenta() {
+        return listaDetalleVenta;
+    }
+
+    public void setListaDetalleVenta(List<DetalleVenta> listaDetalleVenta) {
+        this.listaDetalleVenta = listaDetalleVenta;
+    }
+
+    public List<Producto> getListaProducto() {
+        return listaProducto;
+    }
+
+    public void setListaProducto(List<Producto> listaProducto) {
+        this.listaProducto = listaProducto;
+    }    
+    
 }

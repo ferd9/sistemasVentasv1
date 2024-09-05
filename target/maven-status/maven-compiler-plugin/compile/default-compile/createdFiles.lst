@@ -36,6 +36,7 @@ com\simple\app\vistas\InterGestionarUsuario.class
 com\simple\app\vistas\FrmLogin.class
 com\simple\app\vistas\FrmMenu$2.class
 com\simple\app\vistas\GestionDeCategorias$2.class
+com\simple\app\vistas\IFFacturacion$7.class
 com\simple\app\vistas\custom\CustomCellEditor.class
 com\simple\app\vistas\GestionDeCategorias.class
 com\simple\app\vistas\custom\OptionPanel$1.class
@@ -63,6 +64,7 @@ com\simple\app\modelo\Categoria.class
 com\simple\app\vistas\custom\ActionButton.class
 com\simple\app\vistas\custom\DeletePanel.class
 com\simple\app\vistas\IFFacturacion$2.class
+com\simple\app\vistas\IFFacturacion$8.class
 com\simple\app\vistas\FrmMenu$1.class
 com\simple\app\vistas\FrmMenu$7.class
 com\simple\app\vistas\FrmMenu$4.class
@@ -73,6 +75,7 @@ com\simple\app\dao\UsuarioJpaController.class
 com\simple\app\vistas\IFGestionProductos$2.class
 com\simple\app\vistas\GestionDeCategorias$4.class
 com\simple\app\vistas\custom\DeleteCellEditor.class
+com\simple\app\vistas\IFFacturacion$9.class
 com\simple\app\vistas\IFClientes$4.class
 com\simple\app\vistas\FrmMenu$11.class
 com\simple\app\vistas\FrmMenu$6.class

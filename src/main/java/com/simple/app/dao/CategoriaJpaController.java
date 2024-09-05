@@ -26,8 +26,7 @@ public class CategoriaJpaController implements Serializable {
     private HibernateConfig hibernateConfig = null;
     public CategoriaJpaController() {
         this.hibernateConfig = new HibernateConfig();
-    }
-    private EntityManagerFactory emf = null;
+    }    
 
     public EntityManager getEntityManager() {
         return this.hibernateConfig.getEm();
