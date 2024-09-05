@@ -83,5 +83,4 @@ com\simple\app\vistas\models\ProductoTableModel.class
 com\simple\app\dao\DetalleVentaJpaController.class
 com\simple\app\vistas\GestionDeCategorias$5.class
 com\simple\app\dao\ClienteJpaController.class
-com\simple\app\vistas\FrmMenu$17.class
 com\simple\app\vistas\InterUsuario$1.class

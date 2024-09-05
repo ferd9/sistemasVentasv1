@@ -70,6 +70,7 @@ public class IFGestionProductos extends javax.swing.JInternalFrame {
         tblProductos = new javax.swing.JTable();
 
         setClosable(true);
+        setResizable(true);
         setTitle("Administrar Productos");
 
         jPanel1.setLayout(new java.awt.BorderLayout());

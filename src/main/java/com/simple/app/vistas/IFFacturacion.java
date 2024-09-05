@@ -80,12 +80,12 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
-        jFormattedTextField2 = new javax.swing.JFormattedTextField();
-        jFormattedTextField3 = new javax.swing.JFormattedTextField();
-        jFormattedTextField4 = new javax.swing.JFormattedTextField();
-        jFormattedTextField5 = new javax.swing.JFormattedTextField();
-        jFormattedTextField6 = new javax.swing.JFormattedTextField();
+        jftSubtotal = new javax.swing.JFormattedTextField();
+        jftDescuento = new javax.swing.JFormattedTextField();
+        jftImpuestos = new javax.swing.JFormattedTextField();
+        jftTotal = new javax.swing.JFormattedTextField();
+        jftEfectivo = new javax.swing.JFormattedTextField();
+        jftCambio = new javax.swing.JFormattedTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
@@ -255,47 +255,47 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 6);
         jPanel9.add(jLabel6, gridBagConstraints);
 
-        jFormattedTextField1.setPreferredSize(new java.awt.Dimension(120, 22));
+        jftSubtotal.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
-        jPanel9.add(jFormattedTextField1, gridBagConstraints);
+        jPanel9.add(jftSubtotal, gridBagConstraints);
 
-        jFormattedTextField2.setPreferredSize(new java.awt.Dimension(120, 22));
+        jftDescuento.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
-        jPanel9.add(jFormattedTextField2, gridBagConstraints);
+        jPanel9.add(jftDescuento, gridBagConstraints);
 
-        jFormattedTextField3.setPreferredSize(new java.awt.Dimension(120, 22));
+        jftImpuestos.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
-        jPanel9.add(jFormattedTextField3, gridBagConstraints);
+        jPanel9.add(jftImpuestos, gridBagConstraints);
 
-        jFormattedTextField4.setPreferredSize(new java.awt.Dimension(120, 22));
+        jftTotal.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
-        jPanel9.add(jFormattedTextField4, gridBagConstraints);
+        jPanel9.add(jftTotal, gridBagConstraints);
 
-        jFormattedTextField5.setPreferredSize(new java.awt.Dimension(120, 22));
+        jftEfectivo.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
-        jPanel9.add(jFormattedTextField5, gridBagConstraints);
+        jPanel9.add(jftEfectivo, gridBagConstraints);
 
-        jFormattedTextField6.setPreferredSize(new java.awt.Dimension(120, 22));
+        jftCambio.setPreferredSize(new java.awt.Dimension(120, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 6);
-        jPanel9.add(jFormattedTextField6, gridBagConstraints);
+        jPanel9.add(jftCambio, gridBagConstraints);
 
         jButton1.setText("Registrar venta");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -497,7 +497,15 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
                     }catch(HeadlessException | NumberFormatException e){
                         System.out.println(e.getMessage());
                         cantidadNumerica = 1;
-                    }                    
+                    }
+                    boolean yaFueAgregado = listaProductosSelecionados.stream().anyMatch(prd -> {
+                        return prd.getIdProducto() == productoSelecionado.getIdProducto();
+                    });
+                    
+                    if(yaFueAgregado){
+                        JOptionPane.showMessageDialog(null, "Este producto ya fue agregado.");
+                        return;
+                    }
                     generarDetalleVenta(productoSelecionado, cantidadNumerica);
                     popup.dispose();
                 }
@@ -522,7 +530,7 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
     }
     
     private void generarDetalleVenta(Producto producto, int cantidad){
-        listaProductosSelecionados.add(producto);
+        listaProductosSelecionados.add(producto); 
         
         double descuento = 0.0;
         double iva_impuesto = (producto.getPrecio() * cantidad) * producto.getPorcentajeIva();
@@ -548,12 +556,35 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
         
         this.listaDetalleVentas.add(detalleVenta);
         this.listaProductosSelecionados.add(producto);
+        this.calcularPagoFinal(this.listaDetalleVentas);
         
         this.detalleVentaTableModel = new DetalleVentaTableModel(listaDetalleVentas, listaProductosSelecionados);
         this.tblDetalleVentas.setModel(detalleVentaTableModel);
         
         
     }
+    
+    private void calcularPagoFinal(List<DetalleVenta> detallesVentas){
+        
+        double  totalPagar = 0.0;
+         double descuento = 0.0;
+        double iva_impuesto = 0.0;
+        double subtotal = 0.0;
+        
+        for(DetalleVenta detalleVenta: detallesVentas ){
+            totalPagar += detalleVenta.getTotalPagar();
+            descuento += detalleVenta.getDescuento();
+            iva_impuesto += detalleVenta.getIva();
+            subtotal += detalleVenta.getSubTotal();
+        }
+        
+        this.jftSubtotal.setValue(subtotal);
+        this.jftDescuento.setValue(descuento);
+        this.jftImpuestos.setValue(iva_impuesto);
+        this.jftTotal.setValue(totalPagar);
+        
+    }    
+   
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -562,12 +593,6 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnBuscarProducto;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JFormattedTextField jFormattedTextField2;
-    private javax.swing.JFormattedTextField jFormattedTextField3;
-    private javax.swing.JFormattedTextField jFormattedTextField4;
-    private javax.swing.JFormattedTextField jFormattedTextField5;
-    private javax.swing.JFormattedTextField jFormattedTextField6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -585,6 +610,12 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JFormattedTextField jftCambio;
+    private javax.swing.JFormattedTextField jftDescuento;
+    private javax.swing.JFormattedTextField jftEfectivo;
+    private javax.swing.JFormattedTextField jftImpuestos;
+    private javax.swing.JFormattedTextField jftSubtotal;
+    private javax.swing.JFormattedTextField jftTotal;
     private javax.swing.JRadioButton rbOpcionApellido;
     private javax.swing.JRadioButton rbOpcionDni;
     private javax.swing.JRadioButton rbOpcionNombre;
