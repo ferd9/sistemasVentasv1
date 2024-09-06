@@ -153,8 +153,8 @@ public class ClienteJpaController implements Serializable {
 
         try {
 
-            List<Cliente> clientes = em.createQuery("SELECT u from Cliente u WHERE u." + campo + " = :data", Cliente.class)
-                    .setParameter("data", data)
+            List<Cliente> clientes = em.createQuery("SELECT u from Cliente u WHERE u." + campo + " like :data", Cliente.class)
+                    .setParameter("data", data+"%")
                     .getResultList();
             return clientes;
         } catch (NoResultException ex) {
