@@ -16,9 +16,11 @@ com\simple\app\vistas\GestionDeCategorias$3.class
 com\simple\app\vistas\IFClientes$2.class
 com\simple\app\vistas\IFFacturacion.class
 com\simple\app\vistas\IFClientes$5.class
+com\simple\app\documento\boletas\BoletaVenta$1.class
 com\simple\app\vistas\GestionDeCategorias$1.class
 com\simple\app\vistas\IFFacturacion$6.class
 com\simple\app\vistas\FrmMenu$3.class
+com\simple\app\vistas\IFFacturacion$10.class
 com\simple\app\config\HibernateConfig.class
 com\simple\app\dao\exceptions\IllegalOrphanException.class
 com\simple\app\vistas\custom\TableDeleteActionCellRender.class
@@ -35,6 +37,7 @@ com\simple\app\vistas\FrmMenu$9.class
 com\simple\app\vistas\InterGestionarUsuario.class
 com\simple\app\vistas\FrmLogin.class
 com\simple\app\vistas\FrmMenu$2.class
+com\simple\app\documento\boletas\BoletaVenta$2.class
 com\simple\app\vistas\GestionDeCategorias$2.class
 com\simple\app\vistas\IFFacturacion$7.class
 com\simple\app\vistas\custom\CustomCellEditor.class
@@ -47,6 +50,7 @@ com\simple\app\vistas\IFGestionProductos$4.class
 com\simple\app\vistas\InterUsuario$2.class
 com\simple\app\vistas\IFClientes$3.class
 com\simple\app\vistas\IFGestionProductos.class
+com\simple\app\documento\boletas\BoletaVenta.class
 com\simple\app\vistas\custom\TableActionCellRender.class
 com\simple\app\dao\CabeceraVentaJpaController.class
 com\simple\app\SistemasVentasV1$1.class

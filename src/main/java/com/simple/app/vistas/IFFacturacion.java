@@ -8,6 +8,7 @@ import com.simple.app.dao.CabeceraVentaJpaController;
 import com.simple.app.dao.ClienteJpaController;
 import com.simple.app.dao.DetalleVentaJpaController;
 import com.simple.app.dao.ProductoJpaController;
+import com.simple.app.documento.boletas.BoletaVenta;
 import com.simple.app.modelo.CabeceraVenta;
 import com.simple.app.modelo.Cliente;
 import com.simple.app.modelo.DetalleVenta;
@@ -464,7 +465,10 @@ public class IFFacturacion extends javax.swing.JInternalFrame {
             return;
         }
         
-        JOptionPane.showMessageDialog(null, "Venta generada correctamente.");
+        JOptionPane.showMessageDialog(null, "Venta generada correctamente.");        
+        
+        BoletaVenta.generarBoleta("Boleta - "+cabeceraVenta.getIdCabeceraventa(), cabeceraVenta, listaDetalleVentas);
+        
         limpiarCampos();
         
     }//GEN-LAST:event_btnRegistrarVentaActionPerformed
