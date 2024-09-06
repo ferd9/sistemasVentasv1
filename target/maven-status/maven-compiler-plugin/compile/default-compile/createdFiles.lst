@@ -80,6 +80,7 @@ com\simple\app\vistas\FrmMenu$7.class
 com\simple\app\vistas\FrmMenu$4.class
 com\simple\app\vistas\custom\OptionPanel.class
 com\simple\app\vistas\dialogs\BuscarClienteDialog.class
+com\simple\app\vistas\reportes\IFReporteClientes$1.class
 com\simple\app\modelo\Producto.class
 com\simple\app\vistas\FrmMenu$12.class
 com\simple\app\dao\UsuarioJpaController.class
@@ -88,6 +89,7 @@ com\simple\app\vistas\GestionDeCategorias$4.class
 com\simple\app\vistas\custom\DeleteCellEditor.class
 com\simple\app\vistas\IFFacturacion$9.class
 com\simple\app\vistas\dialogs\BuscarClienteDialog$3.class
+com\simple\app\vistas\reportes\IFReporteClientes.class
 com\simple\app\vistas\IFClientes$4.class
 com\simple\app\vistas\FrmMenu$11.class
 com\simple\app\vistas\FrmMenu$6.class

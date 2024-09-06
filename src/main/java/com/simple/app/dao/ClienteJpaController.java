@@ -164,6 +164,27 @@ public class ClienteJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<Object[]> findClientesByMasCompras(int from) {
+        EntityManager em = getEntityManager();
+
+        try {
+
+            List<Object[]> clientes = em.createQuery("SELECT u.idCliente, u.nombre, u.apellido, COUNT(cv.idCabeceraventa) AS total_ventas "
+                    + "from Cliente u JOIN CabeceraVenta cv ON u.idCliente = cv.idCliente "
+                    + "group by u.idCliente, u.nombre, u.apellido "
+                    + "having count(cv.idCabeceraventa) > :from "
+                    + "order by total_ventas")
+                    .setParameter("from", from)
+                    .getResultList();
+            return clientes;
+        } catch (NoResultException ex) {
+            System.err.println(ex.getMessage());
+            return null;
+        } finally {
+            em.close();
+        }
+    }
 
     public int getClienteCount() {
         EntityManager em = getEntityManager();

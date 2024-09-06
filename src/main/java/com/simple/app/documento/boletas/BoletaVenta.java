@@ -16,6 +16,7 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.simple.app.modelo.CabeceraVenta;
 import com.simple.app.modelo.DetalleVenta;
 import java.awt.BorderLayout;
@@ -91,6 +92,53 @@ public class BoletaVenta {
             e.printStackTrace();
         }
     }
+    
+    
+        public static void generarClienteConMasCompras(String fileName, List<Object[]> listClientes) {
+        try {
+            // Crear el escritor del PDF
+            PdfWriter writer = new PdfWriter(fileName);
+            
+            // Crear el documento PDF
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            // Título de la boleta
+            document.add(new Paragraph("Lista de Clientes con más compras")
+                    .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                    .setBold()
+                    .setFontSize(18));            
+            
+            
+            // Crear la tabla de productos
+            float[] columnWidths = {1, 3, 1, 1};
+            Table table = new Table(columnWidths);
+            table.addHeaderCell("Codigo Cliente");
+            table.addHeaderCell("Nombre");
+            table.addHeaderCell("Apellido");
+            table.addHeaderCell("Cantidad de Compras");
+
+            // Agregar productos a la tabla
+            for (Object[] cliente: listClientes) {
+                table.addCell(cliente[0].toString()); // id cliente
+                table.addCell(cliente[1].toString()); // nombre
+                table.addCell(cliente[2].toString()); // apellido
+                table.addCell(cliente[3].toString()); // total_ventas                
+                
+            }
+            document.add(table);            
+
+            // Cerrar el documento
+            document.close();
+
+            System.out.println("Repote cliente generada correctamente.");
+            mostrarPDFEnDialog(fileName);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    
 
     public static void mostrarPDFEnDialog(String fileName) {
         try {

@@ -1,6 +1,7 @@
 package com.simple.app.vistas;
 
 //import controlador.Reportes;
+import com.simple.app.vistas.reportes.IFReporteClientes;
 import java.awt.Dimension;
 import javax.swing.JDesktopPane;
 
@@ -390,8 +391,9 @@ public class FrmMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem_gestionar_ventasActionPerformed
 
     private void jMenuItem_reportes_clientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_reportes_clientesActionPerformed
-       /* Reportes reporte = new Reportes();
-        reporte.ReportesClientes();*/
+        IFReporteClientes interGraficas = new IFReporteClientes();
+        jDesktopPane_menu.add(interGraficas);
+        interGraficas.setVisible(true);
     }//GEN-LAST:event_jMenuItem_reportes_clientesActionPerformed
 
     private void jMenuItem_reportes_productosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_reportes_productosActionPerformed
