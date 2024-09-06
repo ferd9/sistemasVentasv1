@@ -1,3 +1,4 @@
+com\simple\app\vistas\IFGestionFacturas$2.class
 com\simple\app\vistas\interfaces\TableActionEvent.class
 com\simple\app\vistas\IFFacturacion$4.class
 com\simple\app\vistas\FrmMenu$10.class
@@ -34,6 +35,7 @@ com\simple\app\vistas\InterGestionarUsuario$2.class
 com\simple\app\vistas\FrmMenu.class
 com\simple\app\vistas\IFClientes$1.class
 com\simple\app\vistas\FrmMenu$9.class
+com\simple\app\vistas\IFGestionFacturas$1.class
 com\simple\app\vistas\InterGestionarUsuario.class
 com\simple\app\vistas\FrmLogin.class
 com\simple\app\vistas\FrmMenu$2.class
@@ -91,3 +93,4 @@ com\simple\app\dao\DetalleVentaJpaController.class
 com\simple\app\vistas\GestionDeCategorias$5.class
 com\simple\app\dao\ClienteJpaController.class
 com\simple\app\vistas\InterUsuario$1.class
+com\simple\app\vistas\IFGestionFacturas.class

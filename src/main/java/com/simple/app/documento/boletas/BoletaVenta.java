@@ -109,7 +109,7 @@ public class BoletaVenta {
             JDialog dialog = new JDialog((JFrame) null,"Vista previa de Boleta de Venta", true);
             //dialog.setTitle("Vista previa de Boleta de Venta");
             dialog.getContentPane().add(new JScrollPane(label));
-            dialog.setSize(600, 800);
+            dialog.setSize(600, 400);
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             
                         // Crear el contenedor para la imagen del PDF y los botones

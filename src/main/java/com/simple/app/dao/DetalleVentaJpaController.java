@@ -12,6 +12,7 @@ import jakarta.persistence.EntityManagerFactory;
 import java.io.Serializable;
 import jakarta.persistence.Query;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import java.util.List;
@@ -119,6 +120,24 @@ public class DetalleVentaJpaController implements Serializable {
         try {
             return em.find(DetalleVenta.class, id);
         } finally {
+            em.close();
+        }
+    }
+    
+        public List<DetalleVenta> findDetalleVentaByCabecera(Integer idCabecera) {
+        EntityManager em = getEntityManager();
+        try {            
+            
+            List<DetalleVenta> listaDetalleVentas = em.createQuery(
+            "SELECT u from DetalleVenta u WHERE u.idCabeceraVenta = :idCabecera", DetalleVenta.class).
+            setParameter("idCabecera", idCabecera)
+            .getResultList();
+            
+            return listaDetalleVentas;
+        }catch(NoResultException ex){
+            return null;
+        }
+        finally {
             em.close();
         }
     }
