@@ -255,11 +255,14 @@ public class IFGestionFacturas extends javax.swing.JInternalFrame {
         BuscarClienteDialog buscarClienteDialog = new BuscarClienteDialog((JFrame)null,true);
         buscarClienteDialog.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosed(WindowEvent e) {
-                System.out.println("Cerradoooo.... "+buscarClienteDialog.getClienteSeleccionado().getNombre());
-                if(buscarClienteDialog.getClienteSeleccionado().getIdCliente() != null ){
+            public void windowClosed(WindowEvent e) {    
+                
+                if(buscarClienteDialog.getClienteSeleccionado() == null){
+                    return;
+                }
+                if(buscarClienteDialog.getClienteSeleccionado().getIdCliente() != null ){                   
                     clienteSeleccionado = buscarClienteDialog.getClienteSeleccionado();
-                    handlerSeleccionarCliente(clienteSeleccionado);
+                    handlerSeleccionarCliente(clienteSeleccionado);                    
                 }
             }
         });

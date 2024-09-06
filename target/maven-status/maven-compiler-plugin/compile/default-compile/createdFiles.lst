@@ -96,6 +96,7 @@ com\simple\app\vistas\IFClientes.class
 com\simple\app\SistemasVentasV1.class
 com\simple\app\vistas\models\ProductoTableModel.class
 com\simple\app\dao\DetalleVentaJpaController.class
+com\simple\app\vistas\dialogs\BuscarClienteDialog$4.class
 com\simple\app\vistas\GestionDeCategorias$5.class
 com\simple\app\vistas\IFGestionFacturas$4.class
 com\simple\app\dao\ClienteJpaController.class
